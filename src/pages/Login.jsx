@@ -6,6 +6,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from || '/';
+  const fromInvite = typeof redirectTo === 'string' && redirectTo.startsWith('/invite/');
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +34,14 @@ export default function Login() {
       </div>
       <div className="book">
         <h1>Welcome back ❤️</h1>
+        {fromInvite && (
+          <div className="card" style={{ background: '#fff4ea', borderColor: '#f4b183', textAlign: 'center' }}>
+            <p style={{ margin: 0 }}>
+              💌 <strong>You're accepting an invitation to a shared space.</strong><br />
+              Log in (or <Link to="/register" state={location.state}>create an account</Link>) to join your partner.
+            </p>
+          </div>
+        )}
         <form className="card" onSubmit={handleSubmit}>
           <h2>Log in</h2>
           <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />

@@ -7,15 +7,18 @@ export default function AcceptInvite() {
   const { token } = useParams();
   const navigate = useNavigate();
   const { user, refresh } = useAuth();
-  const [status, setStatus] = useState('confirming'); // confirming | done | error
+  const [status, setStatus] = useState('confirming'); // confirming | done | error | already-paired
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     let cancelled = false;
     async function run() {
       if (user?.couple_id) {
-        setStatus('error');
-        setMessage('You are already part of a couple. Log out first if you want to join a new one.');
+        setStatus('already-paired');
+        setMessage('You are already part of a couple.');
+        setTimeout(() => {
+          if (!cancelled) navigate('/', { replace: true });
+        }, 3000);
         return;
       }
       try {
@@ -45,6 +48,12 @@ export default function AcceptInvite() {
         <div className="card">
           {status === 'confirming' && <p>Linking your account to your partner…</p>}
           {status === 'done' && <p className="message">Connected! Taking you in…</p>}
+          {status === 'already-paired' && (
+            <>
+              <p className="message">{message}</p>
+              <p className="hint">Redirecting to your space…</p>
+            </>
+          )}
           {status === 'error' && (
             <>
               <p className="message">{message}</p>

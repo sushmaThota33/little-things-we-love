@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useAuth } from '../lib/auth.jsx';
@@ -20,6 +20,14 @@ export default function SetupCouple() {
   const [inviteToken, setInviteToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // If the user is already paired, they have no business being on /setup.
+  // Send them to the notes page (which shows the passphrase gate).
+  useEffect(() => {
+    if (user?.couple_id) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   async function createCouple(e) {
     e.preventDefault();

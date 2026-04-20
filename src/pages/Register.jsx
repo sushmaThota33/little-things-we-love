@@ -8,6 +8,7 @@ export default function Register() {
   // If they were heading somewhere specific (e.g. an invite link), go there;
   // otherwise newly-registered users land on /setup to pair with their partner.
   const redirectTo = location.state?.from || '/setup';
+  const fromInvite = typeof redirectTo === 'string' && redirectTo.startsWith('/invite/');
   const { register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,6 +37,14 @@ export default function Register() {
       </div>
       <div className="book">
         <h1>Create your space 💕</h1>
+        {fromInvite && (
+          <div className="card" style={{ background: '#fff4ea', borderColor: '#f4b183', textAlign: 'center' }}>
+            <p style={{ margin: 0 }}>
+              💌 <strong>You're accepting an invitation to a shared space.</strong><br />
+              Create an account (or <Link to="/login" state={location.state}>log in</Link>) to join your partner.
+            </p>
+          </div>
+        )}
         <form className="card" onSubmit={handleSubmit}>
           <h2>Sign up</h2>
           <input type="text" placeholder="Display name (e.g. Bujji)" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required maxLength={40} />
