@@ -6,6 +6,7 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import SetupCouple from './pages/SetupCouple.jsx';
 import AcceptInvite from './pages/AcceptInvite.jsx';
+import Landing from './pages/Landing.jsx';
 import { AuthProvider, useAuth } from './lib/auth.jsx';
 import './index.css';
 
@@ -29,11 +30,9 @@ function RequireAuth({ children }) {
 
 function RequireCouple({ children }) {
   const { user, loading } = useAuth();
-  const location = useLocation();
   if (loading) return <CenteredLoading />;
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />;
-  }
+  // Unauthenticated visitors see the landing page, not the login form.
+  if (!user) return <Navigate to="/welcome" replace />;
   if (!user.couple_id) return <Navigate to="/setup" replace />;
   return children;
 }
@@ -50,6 +49,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/welcome" element={<RedirectIfAuthed><Landing /></RedirectIfAuthed>} />
           <Route path="/login" element={<RedirectIfAuthed><Login /></RedirectIfAuthed>} />
           <Route path="/register" element={<RedirectIfAuthed><Register /></RedirectIfAuthed>} />
           <Route path="/invite/:token" element={<RequireAuth><AcceptInvite /></RequireAuth>} />

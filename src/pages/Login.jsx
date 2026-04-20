@@ -33,6 +33,7 @@ export default function Login() {
         {Array.from({ length: 16 }).map((_, i) => <span key={i}>{['❤️','💗','💕','💖','💘','💞'][i % 6]}</span>)}
       </div>
       <div className="book">
+        <Link to="/welcome" className="back-link">← Back</Link>
         <h1>Welcome back ❤️</h1>
         {fromInvite && (
           <div className="card" style={{ background: '#fff4ea', borderColor: '#f4b183', textAlign: 'center' }}>
